@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Санников](https://up.htmlacademy.ru/javascript/19/user/988953).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Беляев](https://up.htmlacademy.ru/javascript/19/user/691043).
 
 ---
 
