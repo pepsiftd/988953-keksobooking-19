@@ -8,8 +8,6 @@ var ADS_MAX_GUESTS = 4;
 var PIN_MIN_Y = 130;
 var PIN_MAX_Y = 630;
 var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 150;
 
 var ADS_TITLES =
 [
@@ -128,8 +126,8 @@ var createRandomAdsArray = function (amount) {
   for (var i = 0; i < amount; i++) {
     var location =
     {
-      'x': getRandomInteger(PIN_MAX_X) - Math.round(PIN_WIDTH / 2),
-      'y': getRandomInteger(PIN_MAX_Y, PIN_MIN_Y) - Math.round(PIN_HEIGHT / 2)
+      'x': getRandomInteger(PIN_MAX_X),
+      'y': getRandomInteger(PIN_MAX_Y, PIN_MIN_Y)
     };
 
     adsArray[i] =
@@ -163,9 +161,13 @@ var createRandomAdsArray = function (amount) {
 var createNewPin = function (ad) {
   var newPin = pinTemplate.cloneNode(true);
   var pinImage = newPin.querySelector('img');
+  var pinWidth = pinImage.clientWidth;
+  var pinHeight = pinImage.clientHeight;
+  var pinX = ad.location.x - Math.round(pinWidth / 2);
+  var pinY = ad.location.y - Math.round(pinHeight / 2);
 
-  newPin.style.left = (ad.location.x / PIN_MAX_X) * 100 + '%';
-  newPin.style.top = ad.location.y + 'px';
+  newPin.style.left = (pinX / PIN_MAX_X) * 100 + '%';
+  newPin.style.top = pinY + 'px';
   pinImage.src = ad.author.avatar;
   pinImage.alt = ad.offer.title;
 
