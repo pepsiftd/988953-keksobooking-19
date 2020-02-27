@@ -6,7 +6,7 @@ var ADS_MIN_PRICE = 1000;
 var ADS_MAX_ROOMS = 4;
 var ADS_MAX_GUESTS = 4;
 var PIN_WIDTH = 50;
-var PIN_HEIGHT = 165;
+var PIN_HEIGHT = 70;
 var PIN_MIN_Y = 130;
 var PIN_MAX_Y = 630;
 var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
@@ -164,7 +164,7 @@ var createNewPin = function (ad) {
   var newPin = pinTemplate.cloneNode(true);
   var pinImage = newPin.querySelector('img');
   var pinX = ad.location.x - Math.round(PIN_WIDTH / 2);
-  var pinY = ad.location.y - Math.round(PIN_HEIGHT / 2);
+  var pinY = ad.location.y - PIN_HEIGHT;
 
   newPin.style.left = pinX + 'px';
   newPin.style.top = pinY + 'px';
