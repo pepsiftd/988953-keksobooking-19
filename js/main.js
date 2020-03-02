@@ -246,8 +246,8 @@ var activatePage = function () {
 
 var getMainPinCoordinates = function () {
   var mainPin = {
-    x: parseInt(mapPinMain.style.left.slice(0, -2)) + Math.round(MAIN_PIN_WIDTH / 2),
-    y: parseInt(mapPinMain.style.top.slice(0, -2))
+    x: parseInt(mapPinMain.style.left.slice(0, -2), 10) + Math.round(MAIN_PIN_WIDTH / 2),
+    y: parseInt(mapPinMain.style.top.slice(0, -2), 10)
   };
 
   // если страница активна, y по острому концу, если нет - y в середине метки
@@ -260,7 +260,7 @@ var getMainPinCoordinates = function () {
 var setAddress = function () {
   var pin = getMainPinCoordinates();
   addressInput.value = pin.x + ', ' + pin.y;
-}
+};
 
 var mapPinMainMousedownHandler = function (evt) {
   if (evt.button === 0) {
@@ -293,11 +293,11 @@ setAddress();
 var validateCapacity = function () {
   capacitySelect.setCustomValidity('');
 
-  if (roomNumberSelect.value === '100' && capacitySelect.value != 0) {
+  if (roomNumberSelect.value === '100' && parseInt(capacitySelect.value, 10) !== 0) {
     capacitySelect.setCustomValidity('Нельзя заселиться во дворец');
   }
 
-  if (parseInt(roomNumberSelect.value) < capacitySelect.value) {
+  if (parseInt(roomNumberSelect.value, 10) < capacitySelect.value) {
     capacitySelect.setCustomValidity('Гостей не должно быть больше, чем комнат');
   }
 };
