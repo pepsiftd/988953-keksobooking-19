@@ -5,6 +5,9 @@ var ADS_MAX_PRICE = 15000;
 var ADS_MIN_PRICE = 1000;
 var ADS_MAX_ROOMS = 4;
 var ADS_MAX_GUESTS = 4;
+var ENTER_KEY = 'Enter';
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 65 + 22 - 6; // button + ::after - translate
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var PIN_MIN_Y = 130;
@@ -180,21 +183,130 @@ var fillFragment = function (array, fragment) {
   }
 };
 
-// открываем карту
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-
 // находим template и место для вставки
 var pinTemplate = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
 var pinsContainer = document.querySelector('.map__pins');
 
-// собираем массив объявлений и фрагмент из него
-var ads = createRandomAdsArray(ADS_AMOUNT);
-var fragment = document.createDocumentFragment();
-fillFragment(ads, fragment);
+var showRandomAds = function () {
+  // собираем массив объявлений и фрагмент из него
+  var ads = createRandomAdsArray(ADS_AMOUNT);
+  var fragment = document.createDocumentFragment();
+  fillFragment(ads, fragment);
 
-// вставляем фрагмент в блок
-pinsContainer.appendChild(fragment);
+  // вставляем фрагмент в блок
+  pinsContainer.appendChild(fragment);
+};
 
+// находим карту
+var map = document.querySelector('.map');
+
+// находим формы и поля ввода
+var adForm = document.querySelector('.ad-form');
+var filtersForm = document.querySelector('.map__filters');
+var formInputs = adForm.querySelectorAll('input, select');
+
+// главная метка
+var mapPinMain = document.querySelector('.map__pin--main');
+
+// флаг активации страницы
+var pageIsActive = false;
+
+
+// отключение полей и селектов, затемнение карты и формы
+var disablePage = function () {
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  filtersForm.classList.add('map__filters--disabled');
+
+  for (var i = 0; i < formInputs.length; i++) {
+    formInputs[i].disabled = true;
+  }
+
+  pageIsActive = false;
+};
+
+// открытие карты и формы, включение полей и селектов
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  filtersForm.classList.remove('map__filters--disabled');
+
+  for (var i = 0; i < formInputs.length; i++) {
+    formInputs[i].disabled = false;
+  }
+
+  addressInput.readOnly = true;
+
+  pageIsActive = true;
+
+  showRandomAds();
+};
+
+var getMainPinCoordinates = function () {
+  var mainPin = {
+    x: parseInt(mapPinMain.style.left.slice(0, -2)) + Math.round(MAIN_PIN_WIDTH / 2),
+    y: parseInt(mapPinMain.style.top.slice(0, -2))
+  };
+
+  // если страница активна, y по острому концу, если нет - y в середине метки
+  mainPin.y += pageIsActive ? MAIN_PIN_HEIGHT : Math.round(mapPinMain.clientHeight / 2);
+
+  return mainPin;
+};
+
+// устанавливает в поле адреса координаты главной метки
+var setAddress = function () {
+  var pin = getMainPinCoordinates();
+  addressInput.value = pin.x + ', ' + pin.y;
+}
+
+var mapPinMainMousedownHandler = function (evt) {
+  if (evt.button === 0) {
+    if (!pageIsActive) {
+      activatePage();
+    }
+
+    setAddress();
+  }
+};
+
+var mapPinMainEnterPressHandler = function (evt) {
+  if (evt.key === ENTER_KEY) {
+    if (!pageIsActive) {
+      activatePage();
+    }
+  }
+};
+
+mapPinMain.addEventListener('mousedown', mapPinMainMousedownHandler);
+mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
+
+var addressInput = adForm.querySelector('#address');
+var roomNumberSelect = adForm.querySelector('#room_number');
+var capacitySelect = adForm.querySelector('#capacity');
+
+disablePage();
+setAddress();
+
+var validateCapacity = function () {
+  capacitySelect.setCustomValidity('');
+
+  if (roomNumberSelect.value === '100' && capacitySelect.value != 0) {
+    capacitySelect.setCustomValidity('Нельзя заселиться во дворец');
+  }
+
+  if (parseInt(roomNumberSelect.value) < capacitySelect.value) {
+    capacitySelect.setCustomValidity('Гостей не должно быть больше, чем комнат');
+  }
+};
+
+var formChangeHandler = function (evt) {
+  if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
+    validateCapacity();
+  }
+};
+
+validateCapacity();
+adForm.addEventListener('change', formChangeHandler);
