@@ -210,7 +210,7 @@ var map = document.querySelector('.map');
 // находим формы и поля ввода
 var adForm = document.querySelector('.ad-form');
 var filtersForm = document.querySelector('.map__filters');
-var formInputs = adForm.querySelectorAll('input, select');
+var formInputs = adForm.querySelectorAll('input, select, textarea, button');
 
 // главная метка
 var mapPinMain = document.querySelector('.map__pin--main');
@@ -307,9 +307,37 @@ var validateCapacity = function () {
   }
 };
 
+var priceInput = adForm.querySelector('#price');
+var typeInput = adForm.querySelector('#type');
+
+var validatePrice = function () {
+  var minPrice = 0;
+
+  switch (typeInput.value) {
+    case 'bungalo':
+      minPrice = 0;
+      break;
+    case 'flat':
+      minPrice = 1000;
+      break;
+    case 'house':
+      minPrice = 5000;
+      break;
+    case 'palace':
+      minPrice = 10000;
+  }
+
+  priceInput.min = minPrice;
+  priceInput.placeholder = minPrice;
+};
+
 var formChangeHandler = function (evt) {
   if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
     validateCapacity();
+  }
+
+  if (evt.target === priceInput || evt.target === typeInput) {
+    validatePrice();
   }
 };
 
