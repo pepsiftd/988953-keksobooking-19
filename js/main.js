@@ -331,6 +331,19 @@ var validatePrice = function () {
   priceInput.placeholder = minPrice;
 };
 
+var timeinSelect = adForm.querySelector('#timein');
+var timeoutSelect = adForm.querySelector('#timeout');
+
+var validateTime = function (target) {
+  if (target === timeinSelect) {
+    timeoutSelect.value = timeinSelect.value;
+  }
+
+  if (target === timeoutSelect) {
+    timeinSelect.value = timeoutSelect.value;
+  }
+}
+
 var formChangeHandler = function (evt) {
   if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
     validateCapacity();
@@ -339,9 +352,15 @@ var formChangeHandler = function (evt) {
   if (evt.target === priceInput || evt.target === typeInput) {
     validatePrice();
   }
+
+  if (evt.target === timeinSelect || evt.target === timeoutSelect) {
+    validateTime(evt.target);
+  }
 };
 
 validateCapacity();
+validateTime();
+validatePrice();
 adForm.addEventListener('change', formChangeHandler);
 
 // отрисовка карточек
