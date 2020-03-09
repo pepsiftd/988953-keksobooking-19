@@ -196,7 +196,7 @@ var pinsContainer = document.querySelector('.map__pins');
 var ads = createRandomAdsArray(ADS_AMOUNT);
 
 var showAds = function () {
-  //собираем фрагмент из массива данных объявлений
+  // собираем фрагмент из массива данных объявлений
   var fragment = document.createDocumentFragment();
   fillFragment(ads, fragment);
 
@@ -342,7 +342,7 @@ var validateTime = function (target) {
   if (target === timeoutSelect) {
     timeinSelect.value = timeoutSelect.value;
   }
-}
+};
 
 var formChangeHandler = function (evt) {
   if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
@@ -376,13 +376,16 @@ var translateAdType = function (type) {
   switch (type) {
     case 'palace':
       rusType = 'Дворец';
+      break;
     case 'flat':
       rusType = 'Квартира';
+      break;
     case 'house':
       rusType = 'Дом';
+      break;
     case 'bungalo':
       rusType = 'Бунгало';
-  };
+  }
 
   return rusType;
 };
@@ -411,6 +414,8 @@ var addCardFeatures = function (newCard, features) {
     feature.classList.add('popup__feature--' + features[i]);
     featuresContainer.appendChild(feature);
   }
+
+  return 0;
 };
 
 // добавление в карточку newCard фотографий из массива photos
@@ -431,6 +436,7 @@ var addCardPhotos = function (newCard, photos) {
   }
 
   photosContainer.removeChild(photoTemplate);
+  return 0;
 };
 
 // создание DOM-элемента карточки с её заполнением
@@ -455,7 +461,7 @@ var createNewCard = function (ad) {
 };
 
 // создание коллекции карточек из массива объектов объявлений ads для последующей вставки на страницу
-var createCardsCollection = function (ads) {
+var createCardsCollection = function () {
   var cards = [];
 
   for (var i = 0; i < ads.length; i++) {
@@ -468,7 +474,7 @@ var createCardsCollection = function (ads) {
 // обработка показа и скрытия карточек
 
 // создаем массив article карточек
-var cards = createCardsCollection(ads);
+var cards = createCardsCollection();
 // находим элемент, перед которым будем вставлять карточку
 var filtersContainer = document.querySelector('.map__filters-container');
 // переменная для открытой в настоящий момент карточки
@@ -476,7 +482,7 @@ var currentCard;
 
 // обработчики нажатий
 // на крестик в окне карточки
-var popupCloseClickHandler = function (evt) {
+var popupCloseClickHandler = function () {
   closeCurrentCard();
 };
 
@@ -520,7 +526,7 @@ var closeCurrentCard = function () {
   closeButton.removeEventListener('click', popupCloseClickHandler);
   document.removeEventListener('keydown', escPressHandler);
   currentCard = '';
-}
+};
 
 // добавляем обработчик клика на контейнер с метками
 pinsContainer.addEventListener('click', mapPinsClickHandler);
