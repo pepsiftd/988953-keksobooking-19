@@ -6,6 +6,7 @@ var ADS_MIN_PRICE = 1000;
 var ADS_MAX_ROOMS = 4;
 var ADS_MAX_GUESTS = 4;
 var ENTER_KEY = 'Enter';
+var ESC_KEY = 'Escape';
 var MAIN_PIN_WIDTH = 65;
 var MAIN_PIN_HEIGHT = 65 + 22 - 6; // button + ::after - translate
 var PIN_WIDTH = 50;
@@ -179,7 +180,9 @@ var createNewPin = function (ad) {
 
 var fillFragment = function (array, fragment) {
   for (var j = 0; j < array.length; j++) {
-    fragment.appendChild(createNewPin(array[j]));
+    var newPin = createNewPin(array[j]);
+    newPin.value = j;
+    fragment.appendChild(newPin);
   }
 };
 
@@ -189,9 +192,11 @@ var pinTemplate = document.querySelector('#pin')
   .querySelector('.map__pin');
 var pinsContainer = document.querySelector('.map__pins');
 
-var showRandomAds = function () {
-  // собираем массив объявлений и фрагмент из него
-  var ads = createRandomAdsArray(ADS_AMOUNT);
+// собираем массив данных для объявлений
+var ads = createRandomAdsArray(ADS_AMOUNT);
+
+var showAds = function () {
+  // собираем фрагмент из массива данных объявлений
   var fragment = document.createDocumentFragment();
   fillFragment(ads, fragment);
 
@@ -205,7 +210,7 @@ var map = document.querySelector('.map');
 // находим формы и поля ввода
 var adForm = document.querySelector('.ad-form');
 var filtersForm = document.querySelector('.map__filters');
-var formInputs = adForm.querySelectorAll('input, select');
+var formInputs = adForm.querySelectorAll('input, select, textarea, button');
 
 // главная метка
 var mapPinMain = document.querySelector('.map__pin--main');
@@ -241,7 +246,7 @@ var activatePage = function () {
 
   pageIsActive = true;
 
-  showRandomAds();
+  showAds();
 };
 
 var getMainPinCoordinates = function () {
@@ -302,11 +307,226 @@ var validateCapacity = function () {
   }
 };
 
+var priceInput = adForm.querySelector('#price');
+var typeInput = adForm.querySelector('#type');
+
+var validatePrice = function () {
+  var minPrice = 0;
+
+  switch (typeInput.value) {
+    case 'bungalo':
+      minPrice = 0;
+      break;
+    case 'flat':
+      minPrice = 1000;
+      break;
+    case 'house':
+      minPrice = 5000;
+      break;
+    case 'palace':
+      minPrice = 10000;
+  }
+
+  priceInput.min = minPrice;
+  priceInput.placeholder = minPrice;
+};
+
+var timeinSelect = adForm.querySelector('#timein');
+var timeoutSelect = adForm.querySelector('#timeout');
+
+var validateTime = function (target) {
+  if (target === timeinSelect) {
+    timeoutSelect.value = timeinSelect.value;
+  }
+
+  if (target === timeoutSelect) {
+    timeinSelect.value = timeoutSelect.value;
+  }
+};
+
 var formChangeHandler = function (evt) {
   if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
     validateCapacity();
   }
+
+  if (evt.target === priceInput || evt.target === typeInput) {
+    validatePrice();
+  }
+
+  if (evt.target === timeinSelect || evt.target === timeoutSelect) {
+    validateTime(evt.target);
+  }
 };
 
 validateCapacity();
+validateTime();
+validatePrice();
 adForm.addEventListener('change', formChangeHandler);
+
+// отрисовка карточек
+
+// находим шаблон карточки
+var cardTemplate = document.querySelector('#card')
+  .content
+  .querySelector('.map__card');
+
+// перевод типа объявления на русский
+var translateAdType = function (type) {
+  var rusType = '';
+  switch (type) {
+    case 'palace':
+      rusType = 'Дворец';
+      break;
+    case 'flat':
+      rusType = 'Квартира';
+      break;
+    case 'house':
+      rusType = 'Дом';
+      break;
+    case 'bungalo':
+      rusType = 'Бунгало';
+  }
+
+  return rusType;
+};
+
+// служебная функция очистки элемента от дочерних элементов
+var clearChildren = function (element) {
+  while (element.firstChild) {
+    element.removeChild(element.lastChild);
+  }
+};
+
+// добавление в карточку newCard дополнительных параметров из массива features
+// в виде <li class="popup__feature popup__feature--{{features[i]}}"></li>
+var addCardFeatures = function (newCard, features) {
+  var featuresContainer = newCard.querySelector('.popup__features');
+  clearChildren(featuresContainer);
+
+  if (features.length === 0) {
+    newCard.removeChild(featuresContainer);
+    return -1;
+  }
+
+  for (var i = 0; i < features.length; i++) {
+    var feature = document.createElement('li');
+    feature.classList.add('popup__feature');
+    feature.classList.add('popup__feature--' + features[i]);
+    featuresContainer.appendChild(feature);
+  }
+
+  return 0;
+};
+
+// добавление в карточку newCard фотографий из массива photos
+// используя имеющийся в шаблоне пример
+var addCardPhotos = function (newCard, photos) {
+  var photosContainer = newCard.querySelector('.popup__photos');
+  var photoTemplate = newCard.querySelector('.popup__photo');
+
+  if (photos.length === 0) {
+    newCard.removeChild(photosContainer);
+    return -1;
+  }
+
+  for (var i = 0; i < photos.length; i++) {
+    var newPhoto = photoTemplate.cloneNode(true);
+    newPhoto.src = photos[i];
+    photosContainer.appendChild(newPhoto);
+  }
+
+  photosContainer.removeChild(photoTemplate);
+  return 0;
+};
+
+// создание DOM-элемента карточки с её заполнением
+var createNewCard = function (ad) {
+  var newCard = cardTemplate.cloneNode(true);
+
+  newCard.querySelector('.popup__title').textContent = ad.offer.title;
+  newCard.querySelector('.popup__text--address').textContent = ad.offer.address;
+  newCard.querySelector('.popup__text--price').innerHTML = ad.offer.price + '&#x20bd;<span>/ночь</span>';
+  newCard.querySelector('.popup__type').textContent = translateAdType(ad.offer.type);
+  newCard.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+  newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+
+  addCardFeatures(newCard, ad.offer.features);
+
+  newCard.querySelector('.popup__description').textContent = ad.offer.description;
+  newCard.querySelector('.popup__avatar').src = ad.author.avatar;
+
+  addCardPhotos(newCard, ad.offer.photos);
+
+  return newCard;
+};
+
+// создание коллекции карточек из массива объектов объявлений ads для последующей вставки на страницу
+var createCardsCollection = function () {
+  var cards = [];
+
+  for (var i = 0; i < ads.length; i++) {
+    cards[i] = createNewCard(ads[i]);
+  }
+
+  return cards;
+};
+
+// обработка показа и скрытия карточек
+
+// создаем массив article карточек
+var cards = createCardsCollection();
+// находим элемент, перед которым будем вставлять карточку
+var filtersContainer = document.querySelector('.map__filters-container');
+// переменная для открытой в настоящий момент карточки
+var currentCard;
+
+// обработчики нажатий
+// на крестик в окне карточки
+var popupCloseClickHandler = function () {
+  closeCurrentCard();
+};
+
+// на Escape при открытой карточке
+var escPressHandler = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closeCurrentCard();
+  }
+};
+
+// на метку объявления на карте (кроме главной метки)
+var mapPinsClickHandler = function (evt) {
+  // нажатие на map__pin
+  if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
+    showCard(cards[evt.target.value]);
+  }
+  // нажатие на img внутри map__pin
+  if (evt.target.parentNode.classList.contains('map__pin') && !evt.target.parentNode.classList.contains('map__pin--main')) {
+    showCard(cards[evt.target.parentNode.value]);
+  }
+};
+
+// вставляет переданную из массива карточку на карту, обзывает её текущей и вешает обработчики
+var showCard = function (cardToShow) {
+  if (currentCard) {
+    closeCurrentCard();
+  }
+
+  map.insertBefore(cardToShow, filtersContainer);
+  currentCard = cardToShow;
+
+  var closeButton = currentCard.querySelector('.popup__close');
+  closeButton.addEventListener('click', popupCloseClickHandler);
+  document.addEventListener('keydown', escPressHandler);
+};
+
+// удаляет из DOM открытую карточку, подчищает обработчики
+var closeCurrentCard = function () {
+  map.removeChild(currentCard);
+  var closeButton = currentCard.querySelector('.popup__close');
+  closeButton.removeEventListener('click', popupCloseClickHandler);
+  document.removeEventListener('keydown', escPressHandler);
+  currentCard = '';
+};
+
+// добавляем обработчик клика на контейнер с метками
+pinsContainer.addEventListener('click', mapPinsClickHandler);
