@@ -15,6 +15,10 @@
     if (parseInt(roomNumberSelect.value, 10) < capacitySelect.value) {
       capacitySelect.setCustomValidity('Гостей не должно быть больше, чем комнат');
     }
+
+    if (roomNumberSelect.value !== '100' && parseInt(capacitySelect.value, 10) === 0) {
+      capacitySelect.setCustomValidity('Пожалуйста, выберите количество гостей');
+    }
   };
 
   var priceInput = adForm.querySelector('#price');
