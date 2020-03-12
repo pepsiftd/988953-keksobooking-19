@@ -41,7 +41,7 @@
 
     if (features.length === 0) {
       newCard.removeChild(featuresContainer);
-      return -1;
+      return;
     }
 
     for (var i = 0; i < features.length; i++) {
@@ -50,8 +50,6 @@
       feature.classList.add('popup__feature--' + features[i]);
       featuresContainer.appendChild(feature);
     }
-
-    return 0;
   };
 
   // добавление в карточку newCard фотографий из массива photos
@@ -62,7 +60,7 @@
 
     if (photos.length === 0) {
       newCard.removeChild(photosContainer);
-      return -1;
+      return;
     }
 
     for (var i = 0; i < photos.length; i++) {
@@ -72,7 +70,6 @@
     }
 
     photosContainer.removeChild(photoTemplate);
-    return 0;
   };
 
   // создание DOM-элемента карточки с её заполнением
