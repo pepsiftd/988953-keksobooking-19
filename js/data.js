@@ -70,34 +70,6 @@
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
 
-  var chooseRandomFromArray = function (array) {
-    var randomIndex = getRandomInteger(array.length - 1);
-    return {
-      value: array[randomIndex],
-      index: randomIndex
-    };
-  };
-
-  var getRandomInteger = function (max, min) {
-    min = min ? Math.ceil(min) : 0;
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  var chooseSomeFromArray = function (array) {
-    var length = getRandomInteger(array.length); // случайное количество элементов, не больше, чем в исходном массиве
-    var unused = array.slice(); // копируем массив
-    var chosenItems = [];
-
-    for (var i = 0; i < length; i++) {
-      var randomItem = chooseRandomFromArray(unused);
-      chosenItems[i] = randomItem.value;
-      unused.splice(randomItem.index, 1); // убираем выбранный пункт, чтобы не повторялся
-    }
-
-    return chosenItems;
-  };
-
   var generateAvatarLinks = function (amount) {
     var notChosen = []; // массив с цифрами от 0 до amount-1 для генерации неповторяющихся адресов картинок аватарок
     var avatarLinks = [];
@@ -109,7 +81,7 @@
 
     // заполняем массив адресами картинок в случайном порядке
     for (var i = 0; i < amount; i++) {
-      var randomNumber = chooseRandomFromArray(notChosen);
+      var randomNumber = window.util.chooseRandomFromArray(notChosen);
 
       notChosen.splice(randomNumber.index, 1);
       // 'img/avatars/user01.png'
@@ -127,8 +99,8 @@
     for (var i = 0; i < amount; i++) {
       var location =
       {
-        'x': getRandomInteger(PIN_MAX_X),
-        'y': getRandomInteger(PIN_MAX_Y, PIN_MIN_Y)
+        'x': window.util.getRandomInteger(PIN_MAX_X),
+        'y': window.util.getRandomInteger(PIN_MAX_Y, PIN_MIN_Y)
       };
 
       adsArray[i] =
@@ -137,17 +109,17 @@
           'avatar': avatarLinks[i]
         },
         'offer': {
-          'title': chooseRandomFromArray(ADS_TITLES).value,
+          'title': window.util.chooseRandomFromArray(ADS_TITLES).value,
           'address': location.x + ', ' + location.y,
-          'price': getRandomInteger(ADS_MAX_PRICE, ADS_MIN_PRICE),
-          'type': chooseRandomFromArray(ADS_TYPES).value,
-          'rooms': getRandomInteger(ADS_MAX_ROOMS, 1),
-          'guests': getRandomInteger(ADS_MAX_GUESTS, 1),
-          'checkin': chooseRandomFromArray(ADS_CHECKIN_TIMES).value,
-          'checkout': chooseRandomFromArray(ADS_CHECKOUT_TIMES).value,
-          'features': chooseSomeFromArray(ADS_FEATURES),
-          'description': chooseRandomFromArray(ADS_DESCRIPTIONS).value,
-          'photos': chooseSomeFromArray(ADS_PHOTOS)
+          'price': window.util.getRandomInteger(ADS_MAX_PRICE, ADS_MIN_PRICE),
+          'type': window.util.chooseRandomFromArray(ADS_TYPES).value,
+          'rooms': window.util.getRandomInteger(ADS_MAX_ROOMS, 1),
+          'guests': window.util.getRandomInteger(ADS_MAX_GUESTS, 1),
+          'checkin': window.util.chooseRandomFromArray(ADS_CHECKIN_TIMES).value,
+          'checkout': window.util.chooseRandomFromArray(ADS_CHECKOUT_TIMES).value,
+          'features': window.util.chooseSomeFromArray(ADS_FEATURES),
+          'description': window.util.chooseRandomFromArray(ADS_DESCRIPTIONS).value,
+          'photos': window.util.chooseSomeFromArray(ADS_PHOTOS)
         },
         'location': {
           'x': location.x,

@@ -28,18 +28,11 @@
     return rusType;
   };
 
-  // служебная функция очистки элемента от дочерних элементов
-  var clearChildren = function (element) {
-    while (element.firstChild) {
-      element.removeChild(element.lastChild);
-    }
-  };
-
   // добавление в карточку newCard дополнительных параметров из массива features
   // в виде <li class="popup__feature popup__feature--{{features[i]}}"></li>
   var addCardFeatures = function (newCard, features) {
     var featuresContainer = newCard.querySelector('.popup__features');
-    clearChildren(featuresContainer);
+    window.util.clearChildren(featuresContainer);
 
     if (features.length === 0) {
       newCard.removeChild(featuresContainer);
