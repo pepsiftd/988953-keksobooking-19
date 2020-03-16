@@ -4,7 +4,10 @@
   var ENTER_KEY = 'Enter';
   var ESC_KEY = 'Escape';
   var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65 + 22 - 6; // button + ::after - translate
+  var MAIN_PIN_HEIGHT = 65; // button + ::after - translate
+  var PIN_MIN_Y = 130;
+  var PIN_MAX_Y = 630;
+  var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
 
   // находим карту
   var map = document.querySelector('.map');
@@ -139,6 +142,63 @@
 
       setAddress();
     }
+
+    // перетаскивание
+    var coords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var dragged = false;
+
+    var mouseMoveHandler = function (moveEvt) {
+      // moveEvt.preventDefault();
+      dragged = true;
+
+      var moveMainPin = function () {
+        var shift = {
+          x: coords.x - moveEvt.clientX,
+          y: coords.y - moveEvt.clientY
+        };
+
+        var newY = mapPinMain.offsetTop - shift.y;
+        var newX = mapPinMain.offsetLeft - shift.x;
+        var newPinY = newY + mapPinMain.clientHeight;
+        var newPinX = newX + Math.round(mapPinMain.clientWidth / 2);
+
+        if (newPinX >= 0 && newPinX <= PIN_MAX_X) {
+          coords.x = moveEvt.clientX;
+          mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+        }
+
+        if (newPinY >= PIN_MIN_Y && newPinY <= PIN_MAX_Y) {
+          coords.y = moveEvt.clientY;
+          mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+        }
+      };
+
+      moveMainPin();
+
+      setAddress();
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      // upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+
+      if (dragged) {
+        var draggedClickHandler = function (clickEvt) {
+          clickEvt.preventDefault();
+          mapPinMain.removeEventListener('click', draggedClickHandler);
+        };
+        mapPinMain.addEventListener('click', draggedClickHandler);
+      }
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
   };
 
   var mapPinMainEnterPressHandler = function (evt) {
@@ -156,4 +216,8 @@
 
   disablePage();
   setAddress();
+
+  // перемещение метки
+
+
 })();
