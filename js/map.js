@@ -2,9 +2,8 @@
 
 (function () {
   var ENTER_KEY = 'Enter';
-  var ESC_KEY = 'Escape';
   var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65; // button + ::after - translate
+  var MAIN_PIN_HEIGHT = 65; // button height
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
@@ -15,58 +14,18 @@
   // обработка показа и скрытия карточек
 
   // массив article карточек
-  var cards = window.cards;
-  // находим элемент, перед которым будем вставлять карточку
-  var filtersContainer = document.querySelector('.map__filters-container');
-  // переменная для открытой в настоящий момент карточки
-  var currentCard;
-
-  // обработчики нажатий в карточках
-  // на крестик в окне карточки
-  var popupCloseClickHandler = function () {
-    closeCurrentCard();
-  };
-
-  // на Escape при открытой карточке
-  var escPressHandler = function (evt) {
-    if (evt.key === ESC_KEY) {
-      closeCurrentCard();
-    }
-  };
+  var cards = window.cards.list;
 
   // на метку объявления на карте (кроме главной метки)
   var mapPinsClickHandler = function (evt) {
     // нажатие на map__pin
     if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
-      showCard(cards[evt.target.value]);
+      window.cards.show(cards[evt.target.value]);
     }
     // нажатие на img внутри map__pin
     if (evt.target.parentNode.classList.contains('map__pin') && !evt.target.parentNode.classList.contains('map__pin--main')) {
-      showCard(cards[evt.target.parentNode.value]);
+      window.cards.show(cards[evt.target.parentNode.value]);
     }
-  };
-
-  // вставляет переданную из массива карточку на карту, обзывает её текущей и вешает обработчики
-  var showCard = function (cardToShow) {
-    if (currentCard) {
-      closeCurrentCard();
-    }
-
-    map.insertBefore(cardToShow, filtersContainer);
-    currentCard = cardToShow;
-
-    var closeButton = currentCard.querySelector('.popup__close');
-    closeButton.addEventListener('click', popupCloseClickHandler);
-    document.addEventListener('keydown', escPressHandler);
-  };
-
-  // удаляет из DOM открытую карточку, подчищает обработчики
-  var closeCurrentCard = function () {
-    map.removeChild(currentCard);
-    var closeButton = currentCard.querySelector('.popup__close');
-    closeButton.removeEventListener('click', popupCloseClickHandler);
-    document.removeEventListener('keydown', escPressHandler);
-    currentCard = '';
   };
 
   // добавляем обработчик клика на контейнер с метками
@@ -216,8 +175,4 @@
 
   disablePage();
   setAddress();
-
-  // перемещение метки
-
-
 })();

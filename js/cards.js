@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ESC_KEY = 'Escape';
+
   // находим шаблон карточки
   var cardTemplate = document.querySelector('#card')
     .content
@@ -108,5 +110,54 @@
   // создаём массив article карточек
   var cards = createCardsCollection();
 
-  window.cards = cards;
+  // находим карту
+  var map = document.querySelector('.map');
+
+  // находим элемент, перед которым будем вставлять карточку
+  var filtersContainer = document.querySelector('.map__filters-container');
+
+  // переменная для открытой в настоящий момент карточки
+  var currentCard;
+
+  // вставляет переданную из массива карточку на карту, обзывает её текущей и вешает обработчики
+  var showCard = function (cardToShow) {
+    if (currentCard) {
+      closeCurrentCard();
+    }
+
+    map.insertBefore(cardToShow, filtersContainer);
+    currentCard = cardToShow;
+
+    var closeButton = currentCard.querySelector('.popup__close');
+    closeButton.addEventListener('click', popupCloseClickHandler);
+    document.addEventListener('keydown', escPressHandler);
+  };
+
+  // обработчики нажатий в карточках
+  // на крестик в окне карточки
+  var popupCloseClickHandler = function () {
+    closeCurrentCard();
+  };
+
+  // на Escape при открытой карточке
+  var escPressHandler = function (evt) {
+    if (evt.key === ESC_KEY) {
+      closeCurrentCard();
+    }
+  };
+
+  // удаляет из DOM открытую карточку, подчищает обработчики
+  var closeCurrentCard = function () {
+    map.removeChild(currentCard);
+    var closeButton = currentCard.querySelector('.popup__close');
+    closeButton.removeEventListener('click', popupCloseClickHandler);
+    document.removeEventListener('keydown', escPressHandler);
+    currentCard = '';
+  };
+
+  window.cards = {
+    list: cards,
+    current: currentCard,
+    show: showCard
+  }
 })();
