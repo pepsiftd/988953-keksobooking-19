@@ -111,7 +111,6 @@
     var dragged = false;
 
     var mouseMoveHandler = function (moveEvt) {
-      // moveEvt.preventDefault();
       dragged = true;
 
       var moveMainPin = function () {
@@ -141,9 +140,7 @@
       setAddress();
     };
 
-    var mouseUpHandler = function (upEvt) {
-      // upEvt.preventDefault();
-
+    var mouseUpHandler = function () {
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
 

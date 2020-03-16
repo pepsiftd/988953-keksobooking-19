@@ -41,5 +41,5 @@
     chooseRandomFromArray: chooseRandomFromArray,
     getRandomInteger: getRandomInteger,
     chooseSomeFromArray: chooseSomeFromArray
-  }
+  };
 })();

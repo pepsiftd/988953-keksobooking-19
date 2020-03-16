@@ -152,5 +152,5 @@
     list: cards,
     current: currentCard,
     show: showCard
-  }
+  };
 })();
