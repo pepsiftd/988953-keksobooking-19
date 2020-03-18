@@ -72,8 +72,23 @@
     }
   };
 
+  var formSubmitHandler = function (evt) {
+    evt.preventDefault();
+
+    var sendSuccessHandler = function () {
+      console.log('Форма успешно отправлена');
+    };
+
+    var sendErrorHandler = function (errorText) {
+      console.log(errorText);
+    };
+
+    window.ajax.upload(new FormData(adForm), sendSuccessHandler, sendErrorHandler);
+  };
+
   validateCapacity();
   validateTime();
   validatePrice();
   adForm.addEventListener('change', formChangeHandler);
+  adForm.addEventListener('submit', formSubmitHandler);
 })();

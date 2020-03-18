@@ -42,7 +42,7 @@
 
     var loadHandler = function () {
       if (xhr.status === StatusCode.OK) {
-        successHandler(xhr.response);
+        successHandler();
       } else {
         errorHandler('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
