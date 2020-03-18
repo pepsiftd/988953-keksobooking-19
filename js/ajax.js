@@ -21,11 +21,19 @@
 
     xhr.addEventListener('load', loadHandler);
 
+    xhr.addEventListener('error', function () {
+      errorHandler('Произошла ошибка соединения');
+    });
+
+    xhr.addEventListener('timeout', function () {
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
     xhr.timeout = TIMEOUT_IN_MS;
 
     xhr.open('GET', SERVER);
     xhr.send();
-  }
+  };
 
   window.ajax = {
     load: load

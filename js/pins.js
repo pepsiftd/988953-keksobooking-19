@@ -33,11 +33,11 @@
   var pinsContainer = document.querySelector('.map__pins');
 
   var showAds = function () {
-      var fragment = document.createDocumentFragment();
-      fillFragment(window.data.ads, fragment);
+    var fragment = document.createDocumentFragment();
+    fillFragment(window.data.ads, fragment);
 
-      // вставляем фрагмент в блок
-      pinsContainer.appendChild(fragment);
+    // вставляем фрагмент в блок
+    pinsContainer.appendChild(fragment);
   };
 
   var loadAndShowPins = function () {

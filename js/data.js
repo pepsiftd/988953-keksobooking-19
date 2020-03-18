@@ -6,7 +6,6 @@
   var loadData = function (callback) {
     var loadSuccessHandler = function (response) {
       window.data.ads = response;
-      console.log(window.data.ads);
       callback();
     };
 
@@ -20,5 +19,5 @@
   window.data = {
     ads: ads,
     load: loadData
-  }
+  };
 })();
