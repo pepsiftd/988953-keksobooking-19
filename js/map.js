@@ -140,23 +140,9 @@
       setAddress();
     };
 
-    var loadData = function () {
-      var successHandler = function (response) {
-        console.log(response);
-        window.data = response;
-      };
-
-      var errorHandler = function (errorText) {
-        console.log(errorText);
-      };
-
-      window.ajax.load(successHandler, errorHandler);
-    };
-
     var mouseUpHandler = function () {
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
-      loadData();
 
       if (dragged) {
         var draggedClickHandler = function (clickEvt) {

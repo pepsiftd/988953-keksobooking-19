@@ -89,19 +89,17 @@
   };
 
   // создание коллекции карточек из массива объектов объявлений ads для последующей вставки на страницу
+  var cards = [];
+
   var createCardsCollection = function () {
-    var cards = [];
-    var ads = window.data;
+    var ads = window.data.ads;
 
     for (var i = 0; i < ads.length; i++) {
       cards[i] = createNewCard(ads[i]);
     }
 
-    return cards;
+    window.cards.list = cards;
   };
-
-  // создаём массив article карточек
-  var cards = createCardsCollection();
 
   // находим карту
   var map = document.querySelector('.map');
@@ -149,6 +147,7 @@
   };
 
   window.cards = {
+    create: createCardsCollection,
     list: cards,
     current: currentCard,
     show: showCard
