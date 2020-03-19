@@ -29,11 +29,10 @@
 
   // сброс и выключение форм, скрытие карты, меток и карточек
   var resetPage = function () {
-    disablePage();
-
     window.form.reset();
     window.pins.remove();
     window.cards.close();
+    disablePage();
   };
 
   window.page = {

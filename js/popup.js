@@ -55,5 +55,5 @@
   window.popup = {
     success: showSuccessPopup,
     error: showErrorPopup
-  }
+  };
 })();

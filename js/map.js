@@ -43,9 +43,8 @@
     map.classList.remove('map--faded');
   };
 
-  // находим формы и поля ввода
-  var adForm = document.querySelector('.ad-form');
-  var filtersForm = document.querySelector('.map__filters');
+  // находим поле ввода адреса
+  var addressInput = document.querySelector('#address');
 
   // главная метка
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -153,8 +152,6 @@
 
   mapPinMain.addEventListener('mousedown', mapPinMainMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
-
-  var addressInput = adForm.querySelector('#address');
 
   window.map = {
     disable: disableMap,

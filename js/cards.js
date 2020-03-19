@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY = 'Escape';
-
   // находим шаблон карточки
   var cardTemplate = document.querySelector('#card')
     .content
@@ -132,18 +130,20 @@
 
   // на Escape при открытой карточке
   var escPressHandler = function (evt) {
-    window.util.isEscEvent (evt, function () {
+    window.util.isEscEvent(evt, function () {
       closeCurrentCard();
     });
   };
 
   // удаляет из DOM открытую карточку, подчищает обработчики
   var closeCurrentCard = function () {
-    map.removeChild(currentCard);
-    var closeButton = currentCard.querySelector('.popup__close');
-    closeButton.removeEventListener('click', popupCloseClickHandler);
-    document.removeEventListener('keydown', escPressHandler);
-    currentCard = '';
+    if (currentCard) {
+      map.removeChild(currentCard);
+      var closeButton = currentCard.querySelector('.popup__close');
+      closeButton.removeEventListener('click', popupCloseClickHandler);
+      document.removeEventListener('keydown', escPressHandler);
+      currentCard = '';
+    }
   };
 
   window.cards = {
