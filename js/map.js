@@ -3,7 +3,7 @@
 (function () {
   var ENTER_KEY = 'Enter';
   var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65; // button height
+  var MAIN_PIN_HEIGHT = 65 + 22 - 6; // button height + :after - translateY
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
@@ -41,12 +41,25 @@
 
   // главная метка
   var mapPinMain = document.querySelector('.map__pin--main');
+  var mainPinInitialCoords = {
+    x: mapPinMain.offsetLeft + 'px',
+    y: mapPinMain.offsetTop + 'px'
+  };
+
+  var resetMainPin = function () {
+    mapPinMain.style.left = mainPinInitialCoords.x;
+    mapPinMain.style.top = mainPinInitialCoords.y;
+
+    setAddress();
+  };
 
   // флаг активации страницы
   var pageIsActive = false;
 
   // отключение полей и селектов, затемнение карты и формы
   var disablePage = function () {
+    pageIsActive = false;
+
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
     filtersForm.classList.add('map__filters--disabled');
@@ -55,7 +68,7 @@
       formInputs[i].disabled = true;
     }
 
-    pageIsActive = false;
+    resetMainPin();
   };
 
   // открытие карты и формы, включение полей и селектов
@@ -121,8 +134,8 @@
 
         var newY = mapPinMain.offsetTop - shift.y;
         var newX = mapPinMain.offsetLeft - shift.x;
-        var newPinY = newY + mapPinMain.clientHeight;
-        var newPinX = newX + Math.round(mapPinMain.clientWidth / 2);
+        var newPinY = newY + MAIN_PIN_HEIGHT;
+        var newPinX = newX + Math.round(MAIN_PIN_WIDTH / 2);
 
         if (newPinX >= 0 && newPinX <= PIN_MAX_X) {
           coords.x = moveEvt.clientX;
@@ -172,4 +185,9 @@
 
   disablePage();
   setAddress();
+
+  window.map = {
+    disable: disablePage,
+    activate: activatePage
+  };
 })();

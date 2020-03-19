@@ -47,7 +47,17 @@
     });
   };
 
+  var removePins = function () {
+    var pins = pinsContainer.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pinsContainer.removeChild(pins[i]);
+      }
+    }
+  };
+
   window.pins = {
-    show: loadAndShowPins
+    show: loadAndShowPins,
+    remove: removePins
   };
 })();

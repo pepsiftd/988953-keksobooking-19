@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
+  var filtersForm = document.querySelector('.map__filters');
+
   var adForm = document.querySelector('.ad-form');
   var roomNumberSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
+  var resetButton = adForm.querySelector('.ad-form__reset');
 
   var validateCapacity = function () {
     capacitySelect.setCustomValidity('');
@@ -75,15 +78,35 @@
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
 
+    sendForm();
+  };
+
+  var sendForm = function () {
     var sendSuccessHandler = function () {
-      console.log('Форма успешно отправлена');
+      window.popup.success();
     };
 
-    var sendErrorHandler = function (errorText) {
-      console.log(errorText);
+    var sendErrorHandler = function () {
+      window.popup.error();
     };
 
     window.ajax.upload(new FormData(adForm), sendSuccessHandler, sendErrorHandler);
+  };
+
+  var resetForms = function () {
+    adForm.reset();
+    filtersForm.reset();
+  };
+
+  var resetPage = function () {
+    resetForms();
+    window.map.disable();
+    window.pins.remove();
+    window.cards.close();
+  };
+
+  var resetClickHandler = function () {
+    resetPage();
   };
 
   validateCapacity();
@@ -91,4 +114,10 @@
   validatePrice();
   adForm.addEventListener('change', formChangeHandler);
   adForm.addEventListener('submit', formSubmitHandler);
+  resetButton.addEventListener('click', resetClickHandler);
+
+  window.form = {
+    send: sendForm,
+    reset: resetForms
+  };
 })();

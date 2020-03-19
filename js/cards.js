@@ -132,9 +132,9 @@
 
   // на Escape при открытой карточке
   var escPressHandler = function (evt) {
-    if (evt.key === ESC_KEY) {
+    window.util.isEscEvent (evt, function () {
       closeCurrentCard();
-    }
+    });
   };
 
   // удаляет из DOM открытую карточку, подчищает обработчики
@@ -150,6 +150,7 @@
     create: createCardsCollection,
     list: cards,
     current: currentCard,
-    show: showCard
+    show: showCard,
+    close: closeCurrentCard
   };
 })();
