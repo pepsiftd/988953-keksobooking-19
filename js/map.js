@@ -32,12 +32,20 @@
   var pinsContainer = document.querySelector('.map__pins');
   pinsContainer.addEventListener('click', mapPinsClickHandler);
 
-  // активация-деактивация страницы
+  // активация-деактивация карты
+  var disableMap = function () {
+    map.classList.add('map--faded');
+
+    resetMainPin();
+  };
+
+  var activateMap = function () {
+    map.classList.remove('map--faded');
+  };
 
   // находим формы и поля ввода
   var adForm = document.querySelector('.ad-form');
   var filtersForm = document.querySelector('.map__filters');
-  var formInputs = adForm.querySelectorAll('input, select, textarea, button');
 
   // главная метка
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -53,41 +61,6 @@
     setAddress();
   };
 
-  // флаг активации страницы
-  var pageIsActive = false;
-
-  // отключение полей и селектов, затемнение карты и формы
-  var disablePage = function () {
-    pageIsActive = false;
-
-    map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    filtersForm.classList.add('map__filters--disabled');
-
-    for (var i = 0; i < formInputs.length; i++) {
-      formInputs[i].disabled = true;
-    }
-
-    resetMainPin();
-  };
-
-  // открытие карты и формы, включение полей и селектов
-  var activatePage = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('map__filters--disabled');
-
-    for (var i = 0; i < formInputs.length; i++) {
-      formInputs[i].disabled = false;
-    }
-
-    addressInput.readOnly = true;
-
-    pageIsActive = true;
-
-    window.pins.show();
-  };
-
   var getMainPinCoordinates = function () {
     var mainPin = {
       x: parseInt(mapPinMain.style.left.slice(0, -2), 10) + Math.round(MAIN_PIN_WIDTH / 2),
@@ -95,7 +68,7 @@
     };
 
     // если страница активна, y по острому концу, если нет - y в середине метки
-    mainPin.y += pageIsActive ? MAIN_PIN_HEIGHT : Math.round(mapPinMain.clientHeight / 2);
+    mainPin.y += window.page.isActive ? MAIN_PIN_HEIGHT : Math.round(mapPinMain.clientHeight / 2);
 
     return mainPin;
   };
@@ -108,8 +81,8 @@
 
   var mapPinMainMousedownHandler = function (evt) {
     if (evt.button === 0) {
-      if (!pageIsActive) {
-        activatePage();
+      if (!window.page.isActive) {
+        window.page.activate();
       }
 
       setAddress();
@@ -172,8 +145,8 @@
 
   var mapPinMainEnterPressHandler = function (evt) {
     if (evt.key === ENTER_KEY) {
-      if (!pageIsActive) {
-        activatePage();
+      if (!window.page.isActive) {
+        window.page.activate();
       }
     }
   };
@@ -183,11 +156,8 @@
 
   var addressInput = adForm.querySelector('#address');
 
-  disablePage();
-  setAddress();
-
   window.map = {
-    disable: disablePage,
-    activate: activatePage
+    disable: disableMap,
+    activate: activateMap
   };
 })();

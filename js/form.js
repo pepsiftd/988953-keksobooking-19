@@ -2,8 +2,10 @@
 
 (function () {
   var filtersForm = document.querySelector('.map__filters');
-
   var adForm = document.querySelector('.ad-form');
+  var formInputs = adForm.querySelectorAll('input, select, textarea, button');
+
+  var addressInput = adForm.querySelector('#address');
   var roomNumberSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
   var resetButton = adForm.querySelector('.ad-form__reset');
@@ -98,15 +100,28 @@
     filtersForm.reset();
   };
 
-  var resetPage = function () {
-    resetForms();
-    window.map.disable();
-    window.pins.remove();
-    window.cards.close();
+  var disableForms = function () {
+    adForm.classList.add('ad-form--disabled');
+    filtersForm.classList.add('map__filters--disabled');
+
+    for (var i = 0; i < formInputs.length; i++) {
+      formInputs[i].disabled = true;
+    }
+  };
+
+  var enableForms = function () {
+    adForm.classList.remove('ad-form--disabled');
+    filtersForm.classList.remove('map__filters--disabled');
+
+    for (var i = 0; i < formInputs.length; i++) {
+      formInputs[i].disabled = false;
+    }
+
+    addressInput.readOnly = true;
   };
 
   var resetClickHandler = function () {
-    resetPage();
+    window.page.reset();
   };
 
   validateCapacity();
@@ -118,6 +133,8 @@
 
   window.form = {
     send: sendForm,
-    reset: resetForms
+    reset: resetForms,
+    disable: disableForms,
+    enable: enableForms
   };
 })();
