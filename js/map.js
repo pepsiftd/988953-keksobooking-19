@@ -3,7 +3,7 @@
 (function () {
   var ENTER_KEY = 'Enter';
   var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65; // button height
+  var MAIN_PIN_HEIGHT = 65 + 22 - 6; // button height + :after - translateY
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MAX_X = document.querySelector('.map__pins').clientWidth;
@@ -32,47 +32,32 @@
   var pinsContainer = document.querySelector('.map__pins');
   pinsContainer.addEventListener('click', mapPinsClickHandler);
 
-  // активация-деактивация страницы
+  // активация-деактивация карты
+  var disableMap = function () {
+    map.classList.add('map--faded');
 
-  // находим формы и поля ввода
-  var adForm = document.querySelector('.ad-form');
-  var filtersForm = document.querySelector('.map__filters');
-  var formInputs = adForm.querySelectorAll('input, select, textarea, button');
+    resetMainPin();
+  };
+
+  var activateMap = function () {
+    map.classList.remove('map--faded');
+  };
+
+  // находим поле ввода адреса
+  var addressInput = document.querySelector('#address');
 
   // главная метка
   var mapPinMain = document.querySelector('.map__pin--main');
-
-  // флаг активации страницы
-  var pageIsActive = false;
-
-  // отключение полей и селектов, затемнение карты и формы
-  var disablePage = function () {
-    map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    filtersForm.classList.add('map__filters--disabled');
-
-    for (var i = 0; i < formInputs.length; i++) {
-      formInputs[i].disabled = true;
-    }
-
-    pageIsActive = false;
+  var mainPinInitialCoords = {
+    x: mapPinMain.offsetLeft + 'px',
+    y: mapPinMain.offsetTop + 'px'
   };
 
-  // открытие карты и формы, включение полей и селектов
-  var activatePage = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('map__filters--disabled');
+  var resetMainPin = function () {
+    mapPinMain.style.left = mainPinInitialCoords.x;
+    mapPinMain.style.top = mainPinInitialCoords.y;
 
-    for (var i = 0; i < formInputs.length; i++) {
-      formInputs[i].disabled = false;
-    }
-
-    addressInput.readOnly = true;
-
-    pageIsActive = true;
-
-    window.pins.show();
+    setAddress();
   };
 
   var getMainPinCoordinates = function () {
@@ -82,7 +67,7 @@
     };
 
     // если страница активна, y по острому концу, если нет - y в середине метки
-    mainPin.y += pageIsActive ? MAIN_PIN_HEIGHT : Math.round(mapPinMain.clientHeight / 2);
+    mainPin.y += window.page.isActive ? MAIN_PIN_HEIGHT : Math.round(mapPinMain.clientHeight / 2);
 
     return mainPin;
   };
@@ -95,8 +80,8 @@
 
   var mapPinMainMousedownHandler = function (evt) {
     if (evt.button === 0) {
-      if (!pageIsActive) {
-        activatePage();
+      if (!window.page.isActive) {
+        window.page.activate();
       }
 
       setAddress();
@@ -121,8 +106,8 @@
 
         var newY = mapPinMain.offsetTop - shift.y;
         var newX = mapPinMain.offsetLeft - shift.x;
-        var newPinY = newY + mapPinMain.clientHeight;
-        var newPinX = newX + Math.round(mapPinMain.clientWidth / 2);
+        var newPinY = newY + MAIN_PIN_HEIGHT;
+        var newPinX = newX + Math.round(MAIN_PIN_WIDTH / 2);
 
         if (newPinX >= 0 && newPinX <= PIN_MAX_X) {
           coords.x = moveEvt.clientX;
@@ -159,8 +144,8 @@
 
   var mapPinMainEnterPressHandler = function (evt) {
     if (evt.key === ENTER_KEY) {
-      if (!pageIsActive) {
-        activatePage();
+      if (!window.page.isActive) {
+        window.page.activate();
       }
     }
   };
@@ -168,8 +153,8 @@
   mapPinMain.addEventListener('mousedown', mapPinMainMousedownHandler);
   mapPinMain.addEventListener('keydown', mapPinMainEnterPressHandler);
 
-  var addressInput = adForm.querySelector('#address');
-
-  disablePage();
-  setAddress();
+  window.map = {
+    disable: disableMap,
+    activate: activateMap
+  };
 })();

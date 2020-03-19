@@ -33,15 +33,31 @@
   var pinsContainer = document.querySelector('.map__pins');
 
   var showAds = function () {
-    // собираем фрагмент из массива данных объявлений
     var fragment = document.createDocumentFragment();
-    fillFragment(window.data, fragment);
+    fillFragment(window.data.ads, fragment);
 
     // вставляем фрагмент в блок
     pinsContainer.appendChild(fragment);
   };
 
+  var loadAndShowPins = function () {
+    window.data.load(function () {
+      showAds();
+      window.cards.create();
+    });
+  };
+
+  var removePins = function () {
+    var pins = pinsContainer.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pinsContainer.removeChild(pins[i]);
+      }
+    }
+  };
+
   window.pins = {
-    show: showAds
+    show: loadAndShowPins,
+    remove: removePins
   };
 })();

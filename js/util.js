@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ESC_KEY = 'Escape';
+
   // служебная функция очистки элемента от дочерних элементов
   var clearChildren = function (element) {
     while (element.firstChild) {
@@ -36,10 +38,17 @@
     return chosenItems;
   };
 
+  var isEscEvent = function (evt, action) {
+    if (evt.key === ESC_KEY) {
+      action();
+    }
+  };
+
   window.util = {
     clearChildren: clearChildren,
     chooseRandomFromArray: chooseRandomFromArray,
     getRandomInteger: getRandomInteger,
-    chooseSomeFromArray: chooseSomeFromArray
+    chooseSomeFromArray: chooseSomeFromArray,
+    isEscEvent: isEscEvent
   };
 })();

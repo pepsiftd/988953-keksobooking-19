@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY = 'Escape';
-
   // находим шаблон карточки
   var cardTemplate = document.querySelector('#card')
     .content
@@ -89,19 +87,17 @@
   };
 
   // создание коллекции карточек из массива объектов объявлений ads для последующей вставки на страницу
+  var cards = [];
+
   var createCardsCollection = function () {
-    var cards = [];
-    var ads = window.data;
+    var ads = window.data.ads;
 
     for (var i = 0; i < ads.length; i++) {
       cards[i] = createNewCard(ads[i]);
     }
 
-    return cards;
+    window.cards.list = cards;
   };
-
-  // создаём массив article карточек
-  var cards = createCardsCollection();
 
   // находим карту
   var map = document.querySelector('.map');
@@ -134,23 +130,27 @@
 
   // на Escape при открытой карточке
   var escPressHandler = function (evt) {
-    if (evt.key === ESC_KEY) {
+    window.util.isEscEvent(evt, function () {
       closeCurrentCard();
-    }
+    });
   };
 
   // удаляет из DOM открытую карточку, подчищает обработчики
   var closeCurrentCard = function () {
-    map.removeChild(currentCard);
-    var closeButton = currentCard.querySelector('.popup__close');
-    closeButton.removeEventListener('click', popupCloseClickHandler);
-    document.removeEventListener('keydown', escPressHandler);
-    currentCard = '';
+    if (currentCard) {
+      map.removeChild(currentCard);
+      var closeButton = currentCard.querySelector('.popup__close');
+      closeButton.removeEventListener('click', popupCloseClickHandler);
+      document.removeEventListener('keydown', escPressHandler);
+      currentCard = '';
+    }
   };
 
   window.cards = {
+    create: createCardsCollection,
     list: cards,
     current: currentCard,
-    show: showCard
+    show: showCard,
+    close: closeCurrentCard
   };
 })();
