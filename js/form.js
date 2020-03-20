@@ -5,6 +5,7 @@
   var adForm = document.querySelector('.ad-form');
   var formInputs = adForm.querySelectorAll('input, select, textarea, button');
 
+  var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
   var addressInput = adForm.querySelector('#address');
   var roomNumberSelect = adForm.querySelector('#room_number');
@@ -30,11 +31,12 @@
 
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
-    if (adForm.validity.valid) {
-      sendForm();
-    } else {
-      indicateInvalid();
-    }
+    sendForm();
+  };
+
+  var submitButtonClickHandler = function (evt) {
+    removeInvalidIndication();
+    indicateInvalid();
   };
 
   var sendForm = function () {
@@ -64,6 +66,7 @@
 
     adForm.removeEventListener('change', formChangeHandler);
     adForm.removeEventListener('submit', formSubmitHandler);
+    submitButton.removeEventListener('click', submitButtonClickHandler);
     resetButton.removeEventListener('click', resetClickHandler);
   };
 
@@ -83,6 +86,7 @@
 
     adForm.addEventListener('change', formChangeHandler);
     adForm.addEventListener('submit', formSubmitHandler);
+    submitButton.addEventListener('click', submitButtonClickHandler);
     resetButton.addEventListener('click', resetClickHandler);
   };
 
