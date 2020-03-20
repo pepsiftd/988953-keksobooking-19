@@ -32,7 +32,7 @@
     .querySelector('.map__pin');
   var pinsContainer = document.querySelector('.map__pins');
 
-  var showAds = function () {
+  var showPins = function () {
     var fragment = document.createDocumentFragment();
     fillFragment(window.data.ads, fragment);
 
@@ -40,10 +40,12 @@
     pinsContainer.appendChild(fragment);
   };
 
+  // загрузка данных объявлений, создание карточек объявлений, открытие фильтров
   var loadAndShowPins = function () {
     window.data.load(function () {
-      showAds();
+      showPins();
       window.cards.create();
+      window.filters.enable();
     });
   };
 

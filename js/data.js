@@ -10,7 +10,9 @@
     };
 
     var loadErrorHandler = function (errorText) {
-      console.log(errorText);
+      window.popup.error(function () {
+        loadData();
+      }, errorText);
     };
 
     window.ajax.load(loadSuccessHandler, loadErrorHandler);

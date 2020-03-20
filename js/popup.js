@@ -26,8 +26,12 @@
     document.removeEventListener('click', popupClickHandler);
   };
 
-  var showPopup = function (template) {
+  var showPopup = function (template, errorText) {
     currentPopup = template.cloneNode(true);
+    if (errorText) {
+      var captionParagraph = currentPopup.querySelector('.error__message');
+      captionParagraph.textContent = errorText;
+    }
 
     document.addEventListener('keydown', escPressHandler);
     document.addEventListener('click', popupClickHandler);
@@ -40,14 +44,10 @@
     showPopup(successPopupTemplate);
   };
 
-  var showErrorPopup = function () {
-    showPopup(errorPopupTemplate);
+  var showErrorPopup = function (retryClickHandler, errorText) {
+    showPopup(errorPopupTemplate, errorText);
 
     var retryButton = currentPopup.querySelector('.error__button');
-
-    var retryClickHandler = function () {
-      window.form.send();
-    };
 
     retryButton.addEventListener('click', retryClickHandler);
   };

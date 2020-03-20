@@ -45,7 +45,9 @@
     };
 
     var sendErrorHandler = function () {
-      window.popup.error();
+      window.popup.error(function () {
+        sendForm();
+      });
     };
 
     window.ajax.upload(new FormData(adForm), sendSuccessHandler, sendErrorHandler);
@@ -58,7 +60,7 @@
 
   var disableForms = function () {
     adForm.classList.add('ad-form--disabled');
-    filtersForm.classList.add('map__filters--disabled');
+    window.filters.disable();
 
     for (var i = 0; i < formInputs.length; i++) {
       formInputs[i].disabled = true;
@@ -72,7 +74,6 @@
 
   var enableForms = function () {
     adForm.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('map__filters--disabled');
 
     for (var i = 0; i < formInputs.length; i++) {
       formInputs[i].disabled = false;
