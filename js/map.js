@@ -21,10 +21,12 @@
     // нажатие на map__pin
     if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
       window.cards.show(cards[evt.target.value]);
+      window.pins.setCurrent(evt.target);
     }
     // нажатие на img внутри map__pin
     if (evt.target.parentNode.classList.contains('map__pin') && !evt.target.parentNode.classList.contains('map__pin--main')) {
       window.cards.show(cards[evt.target.parentNode.value]);
+      window.pins.setCurrent(evt.target.parentNode);
     }
   };
 

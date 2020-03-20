@@ -47,6 +47,19 @@
     });
   };
 
+  var currentPin;
+
+  var activatePin = function (pin) {
+    currentPin = pin;
+    pin.classList.add('map__pin--active');
+  };
+
+  var deactivateCurrentPin = function () {
+    if (currentPin) {
+      currentPin.classList.remove('map__pin--active');
+    }
+  };
+
   var removePins = function () {
     var pins = pinsContainer.querySelectorAll('.map__pin');
     for (var i = 0; i < pins.length; i++) {
@@ -58,6 +71,8 @@
 
   window.pins = {
     show: loadAndShowPins,
-    remove: removePins
+    remove: removePins,
+    setCurrent: activatePin,
+    deactivateCurrent: deactivateCurrentPin
   };
 })();

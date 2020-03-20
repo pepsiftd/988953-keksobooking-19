@@ -135,10 +135,11 @@
     });
   };
 
-  // удаляет из DOM открытую карточку, подчищает обработчики
+  // удаляет из DOM открытую карточку, снимает флаг "active" с текущей метки, подчищает обработчики
   var closeCurrentCard = function () {
     if (currentCard) {
       map.removeChild(currentCard);
+      window.pins.deactivateCurrent();
       var closeButton = currentCard.querySelector('.popup__close');
       closeButton.removeEventListener('click', popupCloseClickHandler);
       document.removeEventListener('keydown', escPressHandler);

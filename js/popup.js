@@ -36,7 +36,7 @@
   };
 
   var showSuccessPopup = function () {
-    window.map.disable();
+    window.page.reset();
     showPopup(successPopupTemplate);
   };
 
