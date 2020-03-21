@@ -34,7 +34,7 @@
     sendForm();
   };
 
-  var submitButtonClickHandler = function (evt) {
+  var submitButtonClickHandler = function () {
     removeInvalidIndication();
     indicateInvalid();
   };
