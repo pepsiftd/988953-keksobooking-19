@@ -40,6 +40,8 @@
   };
 
   var sendForm = function () {
+    submitButton.blur();
+
     var sendSuccessHandler = function () {
       window.popup.success();
     };
