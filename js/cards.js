@@ -65,21 +65,34 @@
     photosContainer.removeChild(photoTemplate);
   };
 
+  // добавление в указанное поле карточки указанного текста (при его наличии)
+  var addFieldContent = function (field, text, alt) {
+    if (text) {
+      if (alt) {
+        field[alt] = text;
+      } else {
+        field.textContent = text;
+      }
+    } else {
+      field.parentNode.removeChild(field);
+    }
+  };
+
   // создание DOM-элемента карточки с её заполнением
   var createNewCard = function (ad) {
     var newCard = cardTemplate.cloneNode(true);
 
-    newCard.querySelector('.popup__title').textContent = ad.offer.title;
-    newCard.querySelector('.popup__text--address').textContent = ad.offer.address;
-    newCard.querySelector('.popup__text--price').innerHTML = ad.offer.price + '&#x20bd;<span>/ночь</span>';
-    newCard.querySelector('.popup__type').textContent = translateAdType(ad.offer.type);
-    newCard.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
-    newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+    addFieldContent(newCard.querySelector('.popup__title'), ad.offer.title);
+    addFieldContent(newCard.querySelector('.popup__text--address'), ad.offer.address);
+    addFieldContent(newCard.querySelector('.popup__text--price'), ad.offer.price + '&#x20bd;<span>/ночь</span>', 'innerHTML');
+    addFieldContent(newCard.querySelector('.popup__type'), translateAdType(ad.offer.type));
+    addFieldContent(newCard.querySelector('.popup__text--capacity'), ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей');
+    addFieldContent(newCard.querySelector('.popup__text--time'), 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout);
 
     addCardFeatures(newCard, ad.offer.features);
 
-    newCard.querySelector('.popup__description').textContent = ad.offer.description;
-    newCard.querySelector('.popup__avatar').src = ad.author.avatar;
+    addFieldContent(newCard.querySelector('.popup__description'), ad.offer.description);
+    addFieldContent(newCard.querySelector('.popup__avatar'), ad.author.avatar, 'src');
 
     addCardPhotos(newCard, ad.offer.photos);
 
