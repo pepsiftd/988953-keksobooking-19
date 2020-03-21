@@ -11,7 +11,21 @@
   var priceSelect = filtersForm.querySelector('#housing-price');
   var roomsSelect = filtersForm.querySelector('#housing-rooms');
   var guestsSelect = filtersForm.querySelector('#housing-guests');
-  var features = filtersForm.querySelector('#housing-features');
+  var featuresFieldset = filtersForm.querySelector('#housing-features');
+
+  var matchFeatures = function (features) {
+    var selectedFeatures = featuresFieldset.querySelectorAll(':checked');
+
+    for (var i = 0; i < selectedFeatures.length; i++) {
+      var selectedFeature = selectedFeatures[i].value;
+
+      if (!features.includes(selectedFeature)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   var matchData = function (select, parameter) {
     var filter = select.value;
@@ -58,7 +72,8 @@
     if (matchData(typeSelect, ad.offer.type)
       && matchData(roomsSelect, ad.offer.rooms)
       && matchData(guestsSelect, ad.offer.guests)
-      && matchPrice(ad.offer.price)) {
+      && matchPrice(ad.offer.price)
+      && matchFeatures(ad.offer.features)) {
       match = true;
     }
 
