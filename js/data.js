@@ -2,6 +2,7 @@
 
 (function () {
   var ads = [];
+  var filtered = [];
 
   var loadData = function (callback) {
     var loadSuccessHandler = function (response) {
@@ -20,6 +21,7 @@
 
   window.data = {
     ads: ads,
+    filtered: filtered,
     load: loadData
   };
 })();

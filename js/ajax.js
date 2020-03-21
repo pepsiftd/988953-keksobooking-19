@@ -6,7 +6,7 @@
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 100;
+  var TIMEOUT_IN_MS = 10000;
 
   var load = function (successHandler, errorHandler) {
     var xhr = new XMLHttpRequest();

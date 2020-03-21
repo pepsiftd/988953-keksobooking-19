@@ -90,7 +90,7 @@
   var cards = [];
 
   var createCardsCollection = function () {
-    var ads = window.data.ads;
+    var ads = window.data.filtered;
 
     for (var i = 0; i < ads.length; i++) {
       cards[i] = createNewCard(ads[i]);
