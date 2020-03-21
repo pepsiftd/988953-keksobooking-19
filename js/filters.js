@@ -13,6 +13,7 @@
   var guestsSelect = filtersForm.querySelector('#housing-guests');
   var featuresFieldset = filtersForm.querySelector('#housing-features');
 
+  // проверка наличия в объявлении выбранных дополнительных удобств
   var matchFeatures = function (features) {
     var selectedFeatures = featuresFieldset.querySelectorAll(':checked');
 
@@ -27,6 +28,7 @@
     return true;
   };
 
+  // проверка соответствия объявления выбранному в select параметру
   var matchData = function (select, parameter) {
     var filter = select.value;
     var match = false;
@@ -38,6 +40,7 @@
     return match;
   };
 
+  // проверка соответствия объявления выбранному ценовому диапазону
   var matchPrice = function (price) {
     var filter = priceSelect.value;
     var match = false;
@@ -66,6 +69,7 @@
     return match;
   };
 
+  // проверка наличия в объявлении всех выбранных условий
   var matchAll = function (ad) {
     var match = false;
 
@@ -80,11 +84,17 @@
     return match;
   };
 
+  // проверка наличия поля offer
+  var checkOffer = function (ad) {
+    return Boolean(ad.offer);
+  };
+
+  // фильтрация полученных с сервера данных по всем фильтрам
   var filterData = function () {
     var data = window.data.ads;
 
     window.data.filtered = data.filter(function (ad) {
-      return matchAll(ad);
+      return checkOffer(ad) && matchAll(ad);
     });
   };
 
