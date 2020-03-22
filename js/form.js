@@ -5,6 +5,7 @@
   var adForm = document.querySelector('.ad-form');
   var formInputs = adForm.querySelectorAll('input, select, textarea, button');
 
+  var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
   var addressInput = adForm.querySelector('#address');
   var roomNumberSelect = adForm.querySelector('#room_number');
@@ -30,20 +31,25 @@
 
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
-    if (adForm.validity.valid) {
-      sendForm();
-    } else {
-      indicateInvalid();
-    }
+    sendForm();
+  };
+
+  var submitButtonClickHandler = function () {
+    removeInvalidIndication();
+    indicateInvalid();
   };
 
   var sendForm = function () {
+    submitButton.blur();
+
     var sendSuccessHandler = function () {
       window.popup.success();
     };
 
     var sendErrorHandler = function () {
-      window.popup.error();
+      window.popup.error(function () {
+        sendForm();
+      });
     };
 
     window.ajax.upload(new FormData(adForm), sendSuccessHandler, sendErrorHandler);
@@ -56,7 +62,7 @@
 
   var disableForms = function () {
     adForm.classList.add('ad-form--disabled');
-    filtersForm.classList.add('map__filters--disabled');
+    window.filters.disable();
 
     for (var i = 0; i < formInputs.length; i++) {
       formInputs[i].disabled = true;
@@ -64,12 +70,12 @@
 
     adForm.removeEventListener('change', formChangeHandler);
     adForm.removeEventListener('submit', formSubmitHandler);
+    submitButton.removeEventListener('click', submitButtonClickHandler);
     resetButton.removeEventListener('click', resetClickHandler);
   };
 
   var enableForms = function () {
     adForm.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('map__filters--disabled');
 
     for (var i = 0; i < formInputs.length; i++) {
       formInputs[i].disabled = false;
@@ -83,6 +89,7 @@
 
     adForm.addEventListener('change', formChangeHandler);
     adForm.addEventListener('submit', formSubmitHandler);
+    submitButton.addEventListener('click', submitButtonClickHandler);
     resetButton.addEventListener('click', resetClickHandler);
   };
 
