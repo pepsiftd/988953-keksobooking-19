@@ -56,6 +56,7 @@
   };
 
   var resetForms = function () {
+    window.photo.clear();
     adForm.reset();
     filtersForm.reset();
   };
