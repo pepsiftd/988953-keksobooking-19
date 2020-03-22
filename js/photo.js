@@ -3,15 +3,13 @@
 (function () {
   var FILE_TYPES = ['webp', 'jpg', 'jpeg', 'png'];
 
-  var photoUploadField = document.querySelector('.ad-form__upload');
   var photoPreview = document.querySelector('.ad-form__photo');
 
-  var avatarUploadField = document.querySelector('.ad-form__field');
   var avatar = document.querySelector('.ad-form-header__preview img');
   var avatarSrcInitial = avatar.src;
 
-  var photoChooser = photoUploadField.querySelector('input[type=file]');
-  var avatarChooser = avatarUploadField.querySelector('input[type=file]');
+  var photoChooser = document.querySelector('.ad-form__upload input[type=file]');
+  var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
 
   var addPhotoPreview = function () {
     getPicturePreview(photoChooser, function (link) {
@@ -51,17 +49,6 @@
     avatar.src = avatarSrcInitial;
     window.util.clearChildren(photoPreview);
   };
-
-  var photoUploadHandler = function () {
-    addPhotoPreview();
-  };
-
-  var avatarUploadHandler = function () {
-    setAvatarPreview();
-  };
-
-  photoChooser.addEventListener('change', photoUploadHandler);
-  avatarChooser.addEventListener('change', avatarUploadHandler);
 
   window.photo = {
     clear: clearPictures,
