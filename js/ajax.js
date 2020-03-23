@@ -3,10 +3,11 @@
 (function () {
   var DATA_SERVER = 'https://js.dump.academy/keksobooking/data';
   var FORM_SERVER = 'https://js.dump.academy/keksobooking';
+  var TIMEOUT_IN_MS = 10000;
+
   var StatusCode = {
     OK: 200
   };
-  var TIMEOUT_IN_MS = 10000;
 
   var sendXhrRequest = function (method, url, successHandler, errorHandler, data) {
     var xhr = new XMLHttpRequest();

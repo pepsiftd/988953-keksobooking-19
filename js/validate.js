@@ -13,7 +13,7 @@
 
     titleInput.setCustomValidity('');
 
-    if (text.length < min || text.length > max) {
+    if (!titleInput.customError && (text.length < min || text.length > max)) {
       titleInput.setCustomValidity('Заголовок должен содержать не менее ' + min + ' и не более ' + max + ' символов');
     }
   };

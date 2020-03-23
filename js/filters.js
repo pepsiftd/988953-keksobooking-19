@@ -93,7 +93,7 @@
   var filterData = function () {
     var data = window.data.ads;
 
-    window.data.filtered = data.filter(function (ad) {
+    window.data.filteredAds = data.filter(function (ad) {
       return checkOffer(ad) && matchAll(ad);
     });
   };

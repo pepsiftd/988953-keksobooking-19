@@ -13,8 +13,8 @@
   var capacitySelect = adForm.querySelector('#capacity');
   var priceInput = adForm.querySelector('#price');
   var typeInput = adForm.querySelector('#type');
-  var timeinSelect = adForm.querySelector('#timein');
-  var timeoutSelect = adForm.querySelector('#timeout');
+  var timeInSelect = adForm.querySelector('#timein');
+  var timeOutSelect = adForm.querySelector('#timeout');
 
   var photoChooser = adForm.querySelector('.ad-form__upload input[type=file]');
   var avatarChooser = adForm.querySelector('.ad-form__field input[type=file]');
@@ -34,15 +34,15 @@
       }
     }
 
-    if (evt.target === timeinSelect || evt.target === timeoutSelect) {
+    if (evt.target === timeInSelect || evt.target === timeOutSelect) {
       window.validate.time(evt.target);
     }
+  };
 
-    if (evt.target === titleInput) {
-      window.validate.title();
-      if (titleInput.validity.valid && titleInput.classList.contains('ad-form__element--invalid')) {
-        removeRedShadow(titleInput);
-      }
+  var titleInputHandler = function () {
+    window.validate.title();
+    if (titleInput.validity.valid && titleInput.classList.contains('ad-form__element--invalid')) {
+      removeRedShadow(titleInput);
     }
   };
 
@@ -96,6 +96,7 @@
 
     photoChooser.removeEventListener('change', photoUploadHandler);
     avatarChooser.removeEventListener('change', avatarUploadHandler);
+    titleInput.removeEventListener('input', titleInputHandler);
 
     adForm.removeEventListener('change', formChangeHandler);
     adForm.removeEventListener('submit', formSubmitHandler);
@@ -118,6 +119,7 @@
 
     photoChooser.addEventListener('change', photoUploadHandler);
     avatarChooser.addEventListener('change', avatarUploadHandler);
+    titleInput.addEventListener('input', titleInputHandler);
 
     adForm.addEventListener('change', formChangeHandler);
     adForm.addEventListener('submit', formSubmitHandler);

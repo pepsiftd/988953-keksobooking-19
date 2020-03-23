@@ -2,7 +2,7 @@
 
 (function () {
   var ads = [];
-  var filtered = [];
+  var filteredAds = [];
 
   var loadData = function (callback) {
     var loadSuccessHandler = function (response) {
@@ -21,7 +21,7 @@
 
   window.data = {
     ads: ads,
-    filtered: filtered,
+    filteredAds: filteredAds,
     load: loadData
   };
 })();

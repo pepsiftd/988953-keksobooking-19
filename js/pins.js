@@ -36,7 +36,7 @@
 
   var showPins = function () {
     var fragment = document.createDocumentFragment();
-    fillFragment(window.data.filtered, fragment);
+    fillFragment(window.data.filteredAds, fragment);
 
     // вставляем фрагмент в блок
     pinsContainer.appendChild(fragment);
