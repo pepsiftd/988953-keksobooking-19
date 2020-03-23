@@ -15,6 +15,9 @@
   var timeinSelect = adForm.querySelector('#timein');
   var timeoutSelect = adForm.querySelector('#timeout');
 
+  var photoChooser = adForm.querySelector('.ad-form__upload input[type=file]');
+  var avatarChooser = adForm.querySelector('.ad-form__field input[type=file]');
+
   var formChangeHandler = function (evt) {
     if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
       window.validate.capacity();
@@ -27,6 +30,14 @@
     if (evt.target === timeinSelect || evt.target === timeoutSelect) {
       window.validate.time(evt.target);
     }
+  };
+
+  var photoUploadHandler = function () {
+    window.photo.add();
+  };
+
+  var avatarUploadHandler = function () {
+    window.photo.setAvatar();
   };
 
   var formSubmitHandler = function (evt) {
@@ -56,6 +67,7 @@
   };
 
   var resetForms = function () {
+    window.photo.clear();
     adForm.reset();
     filtersForm.reset();
   };
@@ -67,6 +79,9 @@
     for (var i = 0; i < formInputs.length; i++) {
       formInputs[i].disabled = true;
     }
+
+    photoChooser.removeEventListener('change', photoUploadHandler);
+    avatarChooser.removeEventListener('change', avatarUploadHandler);
 
     adForm.removeEventListener('change', formChangeHandler);
     adForm.removeEventListener('submit', formSubmitHandler);
@@ -86,6 +101,9 @@
     window.validate.capacity();
     window.validate.time();
     window.validate.price();
+
+    photoChooser.addEventListener('change', photoUploadHandler);
+    avatarChooser.addEventListener('change', avatarUploadHandler);
 
     adForm.addEventListener('change', formChangeHandler);
     adForm.addEventListener('submit', formSubmitHandler);
