@@ -7,6 +7,7 @@
 
   var submitButton = adForm.querySelector('.ad-form__submit');
   var resetButton = adForm.querySelector('.ad-form__reset');
+  var titleInput = adForm.querySelector('#title');
   var addressInput = adForm.querySelector('#address');
   var roomNumberSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
@@ -21,14 +22,27 @@
   var formChangeHandler = function (evt) {
     if (evt.target === capacitySelect || evt.target === roomNumberSelect) {
       window.validate.capacity();
+      if (capacitySelect.validity.valid && capacitySelect.classList.contains('ad-form__element--invalid')) {
+        removeRedShadow(capacitySelect);
+      }
     }
 
     if (evt.target === priceInput || evt.target === typeInput) {
       window.validate.price();
+      if (priceInput.validity.valid && priceInput.classList.contains('ad-form__element--invalid')) {
+        removeRedShadow(priceInput);
+      }
     }
 
     if (evt.target === timeinSelect || evt.target === timeoutSelect) {
       window.validate.time(evt.target);
+    }
+
+    if (evt.target === titleInput) {
+      window.validate.title();
+      if (titleInput.validity.valid && titleInput.classList.contains('ad-form__element--invalid')) {
+        removeRedShadow(titleInput);
+      }
     }
   };
 

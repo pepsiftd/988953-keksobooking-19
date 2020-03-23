@@ -4,6 +4,19 @@
   var adForm = document.querySelector('.ad-form');
   var roomNumberSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
+  var titleInput = adForm.querySelector('#title');
+
+  var validateTitle = function () {
+    var text = titleInput.value.trim();
+    var min = titleInput.minLength;
+    var max = titleInput.maxLength;
+
+    titleInput.setCustomValidity('');
+
+    if (text.length < min || text.length > max) {
+      titleInput.setCustomValidity('Заголовок должен содержать не менее ' + min + ' и не более ' + max + ' символов');
+    }
+  };
 
   var validateCapacity = function () {
     capacitySelect.setCustomValidity('');
@@ -61,6 +74,7 @@
   window.validate = {
     capacity: validateCapacity,
     price: validatePrice,
-    time: validateTime
+    time: validateTime,
+    title: validateTitle
   };
 })();
