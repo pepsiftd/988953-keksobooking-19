@@ -98,11 +98,13 @@
     });
   };
 
-  var formChangeHandler = window.debounce(function () {
-    filterData();
+  var formChangeHandler = function () {
     window.cards.close();
-    window.pins.redraw();
-  });
+    window.debounce(function () {
+      filterData();
+      window.pins.redraw();
+    });
+  };
 
   var disableForm = function () {
     filtersForm.classList.add('map__filters--disabled');
