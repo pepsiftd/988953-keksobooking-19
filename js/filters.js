@@ -71,17 +71,11 @@
 
   // проверка наличия в объявлении всех выбранных условий
   var matchAll = function (ad) {
-    var match = false;
-
-    if (matchData(typeSelect, ad.offer.type)
+    return matchData(typeSelect, ad.offer.type)
       && matchData(roomsSelect, ad.offer.rooms)
       && matchData(guestsSelect, ad.offer.guests)
       && matchPrice(ad.offer.price)
-      && matchFeatures(ad.offer.features)) {
-      match = true;
-    }
-
-    return match;
+      && matchFeatures(ad.offer.features);
   };
 
   // проверка наличия поля offer
