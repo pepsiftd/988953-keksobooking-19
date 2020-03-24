@@ -104,15 +104,15 @@
     filtersForm.classList.add('map__filters--disabled');
     filtersForm.removeEventListener('change', formChangeHandler);
 
-    for (var i = 0; i < formElements.length; i++) {
-      formElements[i].disabled = true;
-    }
+    formElements.forEach(function (item) {
+      item.disabled = true;
+    });
   };
 
   var enableForm = function () {
-    for (var i = 0; i < formElements.length; i++) {
-      formElements[i].disabled = false;
-    }
+    formElements.forEach(function (item) {
+      item.disabled = false;
+    });
 
     filtersForm.addEventListener('change', formChangeHandler);
     filtersForm.classList.remove('map__filters--disabled');
